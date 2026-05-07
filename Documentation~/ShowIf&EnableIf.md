@@ -45,7 +45,7 @@ public class ConditionExample : MonoBehaviour {
 1. 条件字段的类型可以是`bool`或`Enum`
 2. 如果条件字段/期望值的类型不是`bool`或`Enum`，那么ShowIf无效；
 2. 条件字段必须与Attribute所在字段位于同一个类，否则无效；
-4. 对于`bool`类型的条件字段，期望值一般写一个（一共就俩值），如果不写，默认为true
+4. 对于`bool`类型的条件字段，期望值一般写一个（bool类型一共就俩值，true和false都写上没有意义），如果不写，默认为true
 5. 对于`Enum`类型的条件字段，期望值可以写多个，表示条件字段是期望值中的任意一个时，显示该字段；
 3. 如果条件字段和期望值的类型不匹配，那么ShowIf无效；
 4. `EnableIf`与`ShowIf`参数格式一致，用来控制字段是否可编辑；

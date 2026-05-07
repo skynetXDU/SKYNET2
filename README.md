@@ -3,18 +3,9 @@
 自己手写了一个unity6的Inspector增强，实现了OdinInspector的几个Attribute。
 
 ## 安装
-
-当前项目以 embedded package 方式使用 SKYNET。在 `Packages/manifest.json` 中引用：
-
-```json
-"com.skynets.skynet": "file:com.skynets.skynet"
-```
-
-使用运行时 Attribute 和 `SDictionary` 时，在脚本顶部添加：
-
-```csharp
-using SKYNET;
-```
+依次执行：
+1. unity编辑器中，点击Window - Package Management - Package Manager；
+2. 弹出的窗口中点左上角的“+”号，选Install package from git URL，弹出的输入框里输入<https://github.com/skynetXDU/SKYNET2.git>，点右侧Install等待安装即可；
 
 ## 主要功能
 
@@ -29,7 +20,7 @@ using SKYNET;
 | [SDictionary](./Documentation~/SDictionary.md) | 在 Unity Inspector 中序列化字典数据 |
 | [SDictionaryLabel](./Documentation~/SDictionaryLabel.md) | 为 `SDictionary` 的 key/value 列设置表头名称 |
 
-## 一个示例
+## 1️⃣个示例
 ```csharp
 using System;
 using System.Collections.Generic;

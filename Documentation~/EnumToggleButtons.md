@@ -41,4 +41,4 @@ public class EnumToggleButtonsExample : MonoBehaviour {
 #### 细节
 1. 如果被用在非Enum字段上，那么无任何事发生；
 2. 如果被用在List\<Enum\>上，那么会穿透到列表元素上；
-3. Flags枚举和普通枚举，按钮样式存在差异，见上面的效果图
+3. Flags枚举和普通枚举，按钮样式存在差异，前者的按钮是一排独立的按钮，后者的按钮是直接用`GUI.Toolbar`画出来的；
