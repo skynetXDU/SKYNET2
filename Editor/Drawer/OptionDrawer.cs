@@ -27,28 +27,17 @@ public sealed class OptionDrawer : PropertyDrawer {
         bool enabled = enable == null || ConditionUtil.MatchesCondition(
             OptionUtil.GetConditionOwner(property, fieldInfo), enable.conditionFieldName, enable.expectedValues);
 
-        EditorGUI.BeginProperty(position, displayLabel, property);
-        bool oldMixed = EditorGUI.showMixedValue;
-        try {
-            using (new EditorGUI.DisabledScope(!enabled)) {
-                if (!configuration.IsValid) {
+        using (new EditorGUI.DisabledScope(!enabled)) {
+            if (!configuration.IsValid) {
+                EditorGUI.BeginProperty(position, displayLabel, property);
+                try {
                     DrawFallback(position, property, displayLabel, configuration, key);
-                    return;
                 }
-
-                EditorGUI.showMixedValue = property.hasMultipleDifferentValues;
-                int selected = configuration.FindSelected(
-                    OptionUtil.ReadValue(property, configuration.ValueType), property.hasMultipleDifferentValues);
-                Rect buttons = EditorGUI.PrefixLabel(position, displayLabel);
-                EditorGUI.BeginChangeCheck();
-                int chosen = GUI.Toolbar(buttons, selected, configuration.Labels, EditorStyles.miniButton);
-                if (EditorGUI.EndChangeCheck() && chosen >= 0)
-                    OptionUtil.WriteValue(property, configuration, chosen);
+                finally { EditorGUI.EndProperty(); }
+                return;
             }
-        }
-        finally {
-            EditorGUI.showMixedValue = oldMixed;
-            EditorGUI.EndProperty();
+
+            OptionGUI.Draw(position, property, displayLabel, configuration);
         }
     }
 

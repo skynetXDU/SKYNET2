@@ -20,6 +20,7 @@
 | [TableName](./Documentation~/TableName.md) | 为 `TableList` 中的列设置表头名称 |
 | [SDictionary](./Documentation~/SDictionary.md) | 在 Unity Inspector 中序列化字典数据 |
 | [SDictionaryLabel](./Documentation~/SDictionaryLabel.md) | 为 `SDictionary` 的 key/value 列设置表头名称 |
+| [KeyOption / ValueOption](./Documentation~/KeyOption&ValueOption.md) | 分别为 `SDictionary` 的 key/value 列提供固定选项按钮 |
 
 ## 1️⃣个示例
 ```csharp

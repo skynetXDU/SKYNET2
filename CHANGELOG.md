@@ -4,6 +4,7 @@
 
 ## [Unreleased]
 
+- 新增 `KeyOption` / `ValueOption`，为 SDictionary 的 key/value 列分别提供选项按钮，支持单列整组错误回退、字典数组／列表及统一错误提示。
 - 新增 `Option`：为基本类型字段、数组和列表元素提供值／文字单选按钮，支持严格类型校验和整组错误回退。
 - 支持 Option 与条件特性、TableList、独立窗口组合，并补充示例、文档及 Editor 测试。
 

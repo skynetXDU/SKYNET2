@@ -32,13 +32,30 @@ public class SDictionaryDrawer : PropertyDrawer {
     private const float MinColumnWidth = 50f;
 
     private static readonly Dictionary<string, float> SplitCenterLocalXRatio = new();
+    private readonly Dictionary<(string, float), float> errorWidths = new();
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
-        if (!SDictionaryUtil.CanDrawDictionary(property, fieldInfo))
+        if (!SDictionaryUtil.CanDrawDictionary(property, fieldInfo) || !ShouldShow(property))
             return;
 
-        EditorGUI.BeginProperty(position, label, property);
+        InspectorLabelAttribute customLabel = fieldInfo.GetCustomAttribute<InspectorLabelAttribute>();
+        if (customLabel != null && !string.IsNullOrEmpty(label.text)
+            && OptionUtil.GetValueType(fieldInfo.FieldType) == fieldInfo.FieldType)
+            label = new GUIContent(label) { text = customLabel.Label };
 
+        EnableIfAttribute enable = fieldInfo.GetCustomAttribute<EnableIfAttribute>();
+        bool enabled = enable == null || ConditionUtil.MatchesCondition(
+            OptionUtil.GetConditionOwner(property, fieldInfo), enable.conditionFieldName, enable.expectedValues);
+        EditorGUI.BeginProperty(position, label, property);
+        try {
+            using (new EditorGUI.DisabledScope(!enabled)) {
+                DrawDictionary(position, property, label);
+            }
+        }
+        finally { EditorGUI.EndProperty(); }
+    }
+
+    private void DrawDictionary(Rect position, SerializedProperty property, GUIContent label) {
         Rect rect = position;
 
         float lineHeight = EditorGUIUtility.singleLineHeight;
@@ -57,6 +74,11 @@ public class SDictionaryDrawer : PropertyDrawer {
 
         if (property.isExpanded) {
             SerializedProperty pairsProp = property.FindPropertyRelative("pairs");
+            OptionConfiguration keyOptions = OptionUtil.GetKeyConfiguration(fieldInfo);
+            OptionConfiguration valueOptions = OptionUtil.GetValueConfiguration(fieldInfo);
+            errorWidths[(property.propertyPath, EditorGUIUtility.currentViewWidth)] = Mathf.Max(40f, rect.width);
+            DrawConfigurationError(rect, ref y, property, keyOptions);
+            DrawConfigurationError(rect, ref y, property, valueOptions);
 
             string splitKey = $"{property.serializedObject.targetObject.GetEntityId()}:{property.propertyPath}";
 
@@ -83,7 +105,8 @@ public class SDictionaryDrawer : PropertyDrawer {
             for (int i = 0; i < pairsProp.arraySize; i++) {
                 SerializedProperty pairProp = pairsProp.GetArrayElementAtIndex(i);
 
-                bool deleted = DrawPairRow(rect, ref y, pairProp, pairsProp, i, splitCenterLocalX);
+                bool deleted = DrawPairRow(rect, ref y, pairProp, pairsProp, i, splitCenterLocalX,
+                    keyOptions, valueOptions);
 
                 if (deleted) break;
             }
@@ -91,11 +114,10 @@ public class SDictionaryDrawer : PropertyDrawer {
             DrawAddButton(rect, y, pairsProp, property, label);
         }
 
-        EditorGUI.EndProperty();
     }
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
-        if (!SDictionaryUtil.CanDrawDictionary(property, fieldInfo))
+        if (!SDictionaryUtil.CanDrawDictionary(property, fieldInfo) || !ShouldShow(property))
             return -EditorGUIUtility.standardVerticalSpacing;
 
         float lineHeight = EditorGUIUtility.singleLineHeight;
@@ -107,7 +129,12 @@ public class SDictionaryDrawer : PropertyDrawer {
         }
 
         // 字段名和表头之间的间隔
-        height += SpacingY;
+        height += EditorGUIUtility.standardVerticalSpacing;
+
+        OptionConfiguration keyOptions = OptionUtil.GetKeyConfiguration(fieldInfo);
+        OptionConfiguration valueOptions = OptionUtil.GetValueConfiguration(fieldInfo);
+        height += ConfigurationErrorHeight(property, keyOptions);
+        height += ConfigurationErrorHeight(property, valueOptions);
 
         SerializedProperty pairsProp = property.FindPropertyRelative("pairs");
         // 表头以及表头和第一行之间的间隔
@@ -119,8 +146,8 @@ public class SDictionaryDrawer : PropertyDrawer {
             SerializedProperty keyProp = pairProp.FindPropertyRelative("key");
             SerializedProperty valueProp = pairProp.FindPropertyRelative("value");
 
-            float keyHeight = EditorGUI.GetPropertyHeight(keyProp, true);
-            float valueHeight = EditorGUI.GetPropertyHeight(valueProp, true);
+            float keyHeight = GetCellHeight(keyProp, keyOptions);
+            float valueHeight = GetCellHeight(valueProp, valueOptions);
 
             height += Mathf.Max(lineHeight, keyHeight, valueHeight) + SpacingY;
         }
@@ -128,6 +155,33 @@ public class SDictionaryDrawer : PropertyDrawer {
         height += ButtonHeight;
 
         return height;
+    }
+
+    private bool ShouldShow(SerializedProperty property) {
+        ShowIfAttribute show = fieldInfo.GetCustomAttribute<ShowIfAttribute>();
+        return show == null || ConditionUtil.MatchesCondition(
+            OptionUtil.GetConditionOwner(property, fieldInfo), show.conditionFieldName, show.expectedValues);
+    }
+
+    private float ConfigurationErrorHeight(SerializedProperty property, OptionConfiguration configuration) {
+        if (configuration.Error == null) return 0f;
+        float width = errorWidths.TryGetValue((property.propertyPath, EditorGUIUtility.currentViewWidth), out float cached)
+            ? cached : Mathf.Max(40f, EditorGUIUtility.currentViewWidth - 60f);
+        return Mathf.Max(EditorGUIUtility.singleLineHeight * 2f,
+            EditorStyles.helpBox.CalcHeight(new GUIContent(configuration.Error), Mathf.Max(20f, width - 32f))) + SpacingY;
+    }
+
+    private void DrawConfigurationError(Rect rect, ref float y, SerializedProperty property,
+        OptionConfiguration configuration) {
+        float height = ConfigurationErrorHeight(property, configuration);
+        if (height <= 0f) return;
+        EditorGUI.HelpBox(new Rect(rect.x, y, rect.width, height - SpacingY), configuration.Error, MessageType.Error);
+        y += height;
+    }
+
+    private static float GetCellHeight(SerializedProperty property, OptionConfiguration configuration) {
+        return configuration.IsValid ? EditorGUIUtility.singleLineHeight
+            : EditorGUI.GetPropertyHeight(property, GUIContent.none, true);
     }
 
     // 把泛型从List`1这种写成List<ElementType>这种更易读的形式
@@ -190,14 +244,16 @@ public class SDictionaryDrawer : PropertyDrawer {
         SerializedProperty pairProp,
         SerializedProperty pairsProp,
         int index,
-        float splitCenterLocalX
+        float splitCenterLocalX,
+        OptionConfiguration keyOptions,
+        OptionConfiguration valueOptions
     ) {
         SerializedProperty keyProp = pairProp.FindPropertyRelative("key");
         SerializedProperty valueProp = pairProp.FindPropertyRelative("value");
 
         float lineHeight = EditorGUIUtility.singleLineHeight;
-        float keyHeight = EditorGUI.GetPropertyHeight(keyProp, true);
-        float valueHeight = EditorGUI.GetPropertyHeight(valueProp, true);
+        float keyHeight = GetCellHeight(keyProp, keyOptions);
+        float valueHeight = GetCellHeight(valueProp, valueOptions);
 
         float rowHeight = Mathf.Max(lineHeight, keyHeight, valueHeight);
 
@@ -217,8 +273,8 @@ public class SDictionaryDrawer : PropertyDrawer {
         float keyLabelWidth = Math.Min(80f, keyRect.width * 0.4f);
         float valueLabelWidth = Math.Min(80f, valueRect.width * 0.4f);
 
-        DrawPropertyWithLabelWidth(keyRect, keyProp, GUIContent.none, keyLabelWidth);
-        DrawPropertyWithLabelWidth(valueRect, valueProp, GUIContent.none, valueLabelWidth);
+        DrawPropertyWithLabelWidth(keyRect, keyProp, GUIContent.none, keyLabelWidth, keyOptions);
+        DrawPropertyWithLabelWidth(valueRect, valueProp, GUIContent.none, valueLabelWidth, valueOptions);
         EditorGUI.DrawRect(splitRect, new Color(0.45f, 0.45f, 0.45f, 1f));
 
         if (GUI.Button(deleteRect, "X")) {
@@ -235,7 +291,8 @@ public class SDictionaryDrawer : PropertyDrawer {
         Rect rect,
         SerializedProperty prop,
         GUIContent label,
-        float labelWidth
+        float labelWidth,
+        OptionConfiguration configuration
     ) {
         float oldLabelWidth = EditorGUIUtility.labelWidth;
         // 这里让小三角老老实实待在rect里, 不要跑出来与分隔线重叠
@@ -243,10 +300,16 @@ public class SDictionaryDrawer : PropertyDrawer {
 
         EditorGUIUtility.labelWidth = labelWidth;
         EditorGUIUtility.hierarchyMode = false;
-        EditorGUI.PropertyField(rect, prop, label, true);
-
-        EditorGUIUtility.labelWidth = oldLabelWidth;
-        EditorGUIUtility.hierarchyMode = oldHierarchyMode;
+        try {
+            if (configuration.IsValid)
+                OptionGUI.Draw(rect, prop, label, configuration);
+            else
+                EditorGUI.PropertyField(rect, prop, label, true);
+        }
+        finally {
+            EditorGUIUtility.labelWidth = oldLabelWidth;
+            EditorGUIUtility.hierarchyMode = oldHierarchyMode;
+        }
     }
 
     private void DrawAddButton(Rect rect, float y, SerializedProperty pairsProp, SerializedProperty property, GUIContent label) {

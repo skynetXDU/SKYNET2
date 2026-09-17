@@ -30,12 +30,39 @@ internal sealed class OptionConfiguration {
 }
 
 internal static class OptionUtil {
-    private static readonly Dictionary<FieldInfo, OptionConfiguration> Configurations = new();
+    private static readonly Dictionary<(FieldInfo, Type), OptionConfiguration> Configurations = new();
 
     internal static OptionConfiguration GetConfiguration(FieldInfo field) {
-        if (Configurations.TryGetValue(field, out OptionConfiguration cached)) return cached;
+        return GetConfiguration(field, typeof(OptionAttribute));
+    }
+
+    internal static OptionConfiguration GetKeyConfiguration(FieldInfo field) {
+        return GetConfiguration(field, typeof(KeyOptionAttribute));
+    }
+
+    internal static OptionConfiguration GetValueConfiguration(FieldInfo field) {
+        return GetConfiguration(field, typeof(ValueOptionAttribute));
+    }
+
+    private static OptionConfiguration GetConfiguration(FieldInfo field, Type attributeType) {
+        var cacheKey = (field, attributeType);
+        if (Configurations.TryGetValue(cacheKey, out OptionConfiguration cached)) return cached;
 
         Type type = GetValueType(field.FieldType);
+        bool isDictionaryOption = attributeType != typeof(OptionAttribute);
+        bool isKey = attributeType == typeof(KeyOptionAttribute);
+        if (isDictionaryOption) {
+            // Strip only the outer array/List wrapper, never containers inside K or V.
+            // A nested dictionary gets its own FieldInfo and therefore its own options.
+            if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(SDictionary<,>)) {
+                OptionConfiguration empty = new(type, Array.Empty<object>(), Array.Empty<GUIContent>(), null);
+                Configurations.Add(cacheKey, empty);
+                return empty;
+            }
+            type = type.GetGenericArguments()[isKey ? 0 : 1];
+        }
+        string attributeName = isDictionaryOption ? (isKey ? "KeyOption" : "ValueOption") : "Option";
+        string columnName = isDictionaryOption ? (isKey ? " 的 key 列" : " 的 value 列") : "";
         List<object> values = new();
         List<GUIContent> labels = new();
         List<string> errors = new();
@@ -43,7 +70,7 @@ internal static class OptionUtil {
         // Read the compiler-emitted attribute metadata in declaration order. Unity sorts
         // PropertyAttributes for its drawer chain; that sorted chain is NOT our option list.
         foreach (CustomAttributeData data in field.GetCustomAttributesData()) {
-            if (data.AttributeType != typeof(OptionAttribute)) continue;
+            if (data.AttributeType != attributeType) continue;
             CustomAttributeTypedArgument argument = data.ConstructorArguments[0];
             object value = argument.Value;
             if (argument.ArgumentType.IsEnum && value != null)
@@ -59,11 +86,12 @@ internal static class OptionUtil {
         }
 
         string error = errors.Count == 0 ? null
-            : $"Option 配置错误：字段 {field.Name} 的类型为 {TypeName(type)}"
+            : $"{attributeName} 配置错误：字段 {field.Name}{columnName}的类型为 {TypeName(type)}"
                 + (IsSupported(type) ? "。" : "（不支持）。")
-                + string.Join("；", errors) + "。该字段的所有 Option 已停用。";
+                + string.Join("；", errors)
+                + (isDictionaryOption ? $"。该列的所有 {attributeName} 已停用。" : "。该字段的所有 Option 已停用。");
         OptionConfiguration configuration = new(type, values.ToArray(), labels.ToArray(), error);
-        Configurations.Add(field, configuration);
+        Configurations.Add(cacheKey, configuration);
         return configuration;
     }
 
