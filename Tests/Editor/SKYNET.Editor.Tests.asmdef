@@ -1,0 +1,7 @@
+{
+    "name": "SKYNET.Editor.Tests",
+    "references": ["SKYNET", "SKYNET.Editor"],
+    "includePlatforms": ["Editor"],
+    "optionalUnityReferences": ["TestAssemblies"],
+    "autoReferenced": false
+}

@@ -15,6 +15,7 @@
 | [ShowIf](./Documentation~/ShowIf&EnableIf.md) | 根据 bool、enum 或 Flags enum 条件隐藏/显示字段 |
 | [EnableIf](./Documentation~/ShowIf&EnableIf.md) | 根据 bool、enum 或 Flags enum 条件启用/禁用字段 |
 | [EnumToggleButtons](./Documentation~/EnumToggleButtons.md) | 将 enum 或 Flags enum 绘制成按钮 |
+| [Option](./Documentation~/Option.md) | 为基本类型字段提供可重复标注的值／文字单选按钮 |
 | [TableList](./Documentation~/TableList.md) | 将数组或 `List<T>` 绘制成表格 |
 | [TableName](./Documentation~/TableName.md) | 为 `TableList` 中的列设置表头名称 |
 | [SDictionary](./Documentation~/SDictionary.md) | 在 Unity Inspector 中序列化字典数据 |
@@ -133,4 +134,3 @@ public class Player : MonoBehaviour {
 显示效果如下：
 ![演示1](sample1.png)
 ![演示2](sample2.png)
-

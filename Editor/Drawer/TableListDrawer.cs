@@ -280,7 +280,8 @@ public class TableListDrawer : PropertyDrawer {
         if (height <= 0f)
             return;
 
-        if (property.propertyType == SerializedPropertyType.Boolean) {
+        if (property.propertyType == SerializedPropertyType.Boolean
+            && !(fi ?? fieldInfo).IsDefined(typeof(OptionAttribute), false)) {
             // 处理ShowIf
             ShowIfAttribute sa = fi?.GetCustomAttribute<ShowIfAttribute>();
             if(sa != null && !ConditionUtil.MatchesCondition(property, sa.conditionFieldName, sa.expectedValues)) {
