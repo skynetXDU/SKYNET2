@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using SKYNET;
 
+namespace SKYNET {
 [Serializable]
 public class WeirdRow {
 
@@ -73,4 +74,5 @@ public class Enemy : MonoBehaviour {
     [InspectorLabel("又隐藏又禁用的坏字典")]
     public SDictionary<string, SomeClass[][]> mixedBadDict;
 
+}
 }

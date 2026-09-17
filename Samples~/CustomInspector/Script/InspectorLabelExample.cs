@@ -2,6 +2,7 @@ using System;
 using SKYNET;
 using UnityEngine;
 
+namespace SKYNET{
 [Serializable]
 public class Character {
 
@@ -18,4 +19,5 @@ public class InspectorLabelExample : MonoBehaviour {
 
     [InspectorLabel("角色")]
     public Character character;
+}
 }

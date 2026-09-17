@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SKYNET;
 using UnityEngine;
 
+namespace SKYNET{
 /// <summary>Attach to an empty GameObject to try Option buttons and invalid configurations.</summary>
 public class OptionExample : MonoBehaviour {
     [InspectorLabel("显示条件选项")]
@@ -95,4 +96,5 @@ public class OptionExampleRow {
     [TableName("等级")]
     [Option(1, "低")] [Option(2, "中")] [Option(3, "高")]
     public int level = 1;
+}
 }

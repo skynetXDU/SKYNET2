@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using SKYNET;
 using UnityEngine;
 
+namespace SKYNET {
+
 public class DictionaryOptionExample : MonoBehaviour {
     [InspectorLabel("仅限制 value")]
     [ValueOption(1, "低")] [ValueOption(2, "中")] [ValueOption(3, "高")]
@@ -60,4 +62,6 @@ public class DictionaryOptionExample : MonoBehaviour {
         result[key] = value;
         return result;
     }
+}
+
 }

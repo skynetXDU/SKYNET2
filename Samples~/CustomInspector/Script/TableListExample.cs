@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SKYNET;
 using UnityEngine;
 
+namespace SKYNET{
 [Serializable]
 public class Location {
     [TableName("索引")]
@@ -20,4 +21,5 @@ public class TableListExample : MonoBehaviour {
     [InspectorLabel("地点列表")]
     [TableList]
     public List<Location> locations;
+}
 }

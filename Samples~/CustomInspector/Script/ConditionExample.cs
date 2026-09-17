@@ -1,6 +1,9 @@
 using UnityEngine;
 using SKYNET;
 
+namespace SKYNET
+{
+ 
 public enum AttackType {
     Melee,
     Projectile,
@@ -22,4 +25,6 @@ public class ConditionExample : MonoBehaviour {
 
     [InspectorLabel("投射物"), EnableIf("attackType", AttackType.Projectile)]
     public GameObject projectilePrefab;
+}
+
 }

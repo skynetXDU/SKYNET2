@@ -1,7 +1,7 @@
 using SKYNET;
 using UnityEngine;
 
-
+namespace SKYNET{
 public class EnumToggleButtonsExample : MonoBehaviour {
     
     [InspectorLabel("攻击类型")]
@@ -11,4 +11,4 @@ public class EnumToggleButtonsExample : MonoBehaviour {
     [InspectorLabel("Flags枚举")]
     [EnumToggleButtons]
     public SomeEnumF someEnumF;
-}
+}}

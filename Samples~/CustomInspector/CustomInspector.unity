@@ -128,7 +128,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 20297049}
-  - component: {fileID: 20297048}
+  - component: {fileID: 20297050}
+  - component: {fileID: 20297052}
+  - component: {fileID: 20297051}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -136,45 +138,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &20297048
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 20297047}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d1b363d5c136c5498bdf8792c70a0bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Player
-  someEnumF: 6
-  onlyWhenSecond: 0
-  someEnum: 0
-  field0: 1
-  field1: 1
-  someClass:
-    field2: 1
-    field4: 1
-    field0: 0
-    field1: 
-    field3: 0
-    field5: {fileID: 0}
-  someClasses: []
-  someEnums: 0200000004000000
-  dict:
-    pairs: []
-  dictList0: []
-  dictList:
-    pairs:
-    - key: 44
-      value:
-        pairs:
-        - key: 0
-          value: 0
-    - key: 
-      value:
-        pairs: []
 --- !u!4 &20297049
 Transform:
   m_ObjectHideFlags: 0
@@ -190,6 +153,159 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &20297050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 20297047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a10290fbbaf918b4bbc937226c3d811e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player
+  someEnumF: 0
+  onlyWhenSecond: 0
+  someEnum: 0
+  field0: 0
+  field1: 0
+  someClass:
+    field2: 0
+    field4: 0
+    field0: 0
+    field1: 
+    field3: 0
+    field5: {fileID: 0}
+    field6:
+      pairs: []
+  someClasses: []
+  someEnums: 
+  dict:
+    pairs: []
+  dictList0: []
+  dictList:
+    pairs:
+    - key: 111
+      value:
+        pairs:
+        - key: 12
+          value: 77
+  a: 8
+  b: 9
+--- !u!114 &20297051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 20297047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4921854e38c640a58bf493b4e570038b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DictionaryOptionExample
+  levels:
+    pairs:
+    - key: "\u81EA\u5B9A\u4E49\u540D\u79F0"
+      value: 2
+    - key: 
+      value: 3
+  attributes:
+    pairs:
+    - key: hp
+      value: 123
+  stats:
+    pairs:
+    - key: hp
+      value: 200
+    - key: mp
+      value: 100
+  invalidKey:
+    pairs:
+    - key: "\u4FDD\u7559"
+      value: 100
+  invalidValue:
+    pairs:
+    - key: hp
+      value: 42
+  invalidEmpty:
+    pairs:
+    - key: 
+      value: 0
+  unmatched:
+    pairs: []
+  list:
+  - pairs:
+    - key: hp
+      value: 100
+  - pairs:
+    - key: mp
+      value: 200
+  array:
+  - pairs:
+    - key: hp
+      value: 100
+  show: 1
+  editable: 1
+  conditional:
+    pairs:
+    - key: hp
+      value: 100
+  nested:
+    pairs:
+    - key: 
+      value:
+        pairs:
+        - key: 
+          value: 0
+--- !u!114 &20297052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 20297047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9bf1561e4f1474b8977629df6cf6a9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OptionExample
+  showOptions: 1
+  enableOptions: 1
+  number: 1
+  text: bar
+  boolean: 1
+  character: 20013
+  unsignedByte: 0
+  signedByte: 0
+  smallInteger: -32768
+  unsignedSmallInteger: 65535
+  unsignedInteger: 4294967295
+  largeInteger: 9223372036854775807
+  unsignedLargeInteger: 0
+  speed: 1
+  precision: 1.7976931348623157e+308
+  conditional: 2
+  array: 030000000200000001000000
+  list:
+  - bar
+  - foo
+  tableFlags: 0100
+  rows:
+  - enabled: 1
+    level: 1
+  - enabled: 1
+    level: 2
+  - enabled: 1
+    level: 1
+  unmatched: 1
+  duplicate: 1
+  invalidNumber: 42
+  invalidNull: "\u4FDD\u6301\u539F\u503C"
+  unsupported: {x: 1, y: 1, z: 1}
+  kv:
+    pairs: []
 --- !u!1 &729341234
 GameObject:
   m_ObjectHideFlags: 0
@@ -199,7 +315,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 729341236}
-  - component: {fileID: 729341235}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -207,40 +322,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &729341235
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 729341234}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0ccf92f007019b41860687b10718334, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  dictArrayArray:
-    pairs: []
-  dictListList:
-    pairs: []
-  dictArrayList:
-    pairs: []
-  dictListArray:
-    pairs: []
-  badDictList: []
-  badDictArray: []
-  nestedBadDict:
-    pairs: []
-  listNestedBadDict: []
-  weirdRows:
-  - badDict:
-      pairs: []
-  hiddenBadDict:
-    pairs: []
-  disabledBadDict:
-    pairs: []
-  mixedBadDict:
-    pairs: []
 --- !u!4 &729341236
 Transform:
   m_ObjectHideFlags: 0
@@ -250,7 +331,7 @@ Transform:
   m_GameObject: {fileID: 729341234}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.1953, y: -1.22632, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

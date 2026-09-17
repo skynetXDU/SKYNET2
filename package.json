@@ -1,9 +1,9 @@
 {
   "name": "com.skynets.skynet",
   "displayName": "SKYNET",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "unity": "6000.0",
-  "description": "自己手搓出来的unity编辑器增强, 实现了OdinInspector里的几个功能",
+  "description": "\u81ea\u5df1\u624b\u6413\u51fa\u6765\u7684unity\u7f16\u8f91\u5668\u589e\u5f3a, \u5b9e\u73b0\u4e86OdinInspector\u91cc\u7684\u51e0\u4e2a\u529f\u80fd",
   "author": {
     "name": "skynet",
     "url": "https://github.com/skynetXDU",
@@ -11,5 +11,12 @@
   },
   "changelogUrl": "https://github.com/skynetXDU/SKYNET2/blob/master/CHANGELOG.md",
   "documentationUrl": "https://github.com/skynetXDU/SKYNET2",
-  "licensesUrl": "https://github.com/skynetXDU/SKYNET2/blob/master/LICENSE"
+  "licensesUrl": "https://github.com/skynetXDU/SKYNET2/blob/master/LICENSE",
+  "samples": [
+    {
+      "displayName": "示例",
+      "description": "提供示例场景和脚本",
+      "path": "Samples~/CustomInspector"
+    }
+  ]
 }

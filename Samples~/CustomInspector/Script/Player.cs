@@ -4,6 +4,7 @@ using System.Reflection;
 using UnityEngine;
 using SKYNET;
 
+namespace SKYNET {
 [Flags]
 public enum SomeEnumF {
     [InspectorName("一")]
@@ -102,4 +103,5 @@ public class Player : MonoBehaviour {
     [SDictionaryLabel("字符串", "子字典")]
     public SDictionary<string, SDictionary<int, int>> dictList;
 
+}
 }
